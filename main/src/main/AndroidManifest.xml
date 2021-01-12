@@ -9,20 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!-- Used to show all apps in the allowed Apps selection -->
-    <!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />-->
-
-
-    <!--    <queries>-->
-    <!--        <intent>-->
-    <!--            <action android:name="android.intent.action.GET_CONTENT" />-->
-    <!--        </intent>-->
-    <!--        <intent>-->
-    <!--            <action android:name="android.intent.action.ACTION_OPEN_DOCUMENT" />-->
-    <!--        </intent>-->
-    <!--    </queries>-->
-
-
     <application
         android:name=".core.ICSOpenVPNApplication"
         android:allowBackup="true"
@@ -33,6 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/blinkt"
         tools:ignore="UnusedAttribute">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="android.content.APP_RESTRICTIONS"
             android:resource="@xml/app_restrictions" />
@@ -44,7 +38,6 @@
             android:noHistory="true"
             android:taskAffinity=".DisconnectVPN"
             android:theme="@style/blinkt.dialog" />
-
 
         <service
             android:name=".core.OpenVPNService"
@@ -85,7 +78,6 @@
             </intent-filter>
         </receiver>
 
-
         <activity
             android:name=".LaunchVPN"
             android:autoRemoveFromRecents="true"
@@ -110,11 +102,11 @@
         <activity android:name=".api.RemoteAction" />
 
         <activity-alias
-            android:name=".api.ConnectVPN"
+            android:name=".api.DisconnectVPN"
             android:exported="true"
             android:targetActivity=".api.RemoteAction" />
         <activity-alias
-            android:name=".api.DisconnectVPN"
+            android:name=".api.ConnectVPN"
             android:exported="true"
             android:targetActivity=".api.RemoteAction" />
     </application>

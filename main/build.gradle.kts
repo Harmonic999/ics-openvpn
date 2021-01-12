@@ -10,6 +10,7 @@ plugins {
     id("checkstyle")
     kotlin("android")
     kotlin("android.extensions")
+    id("kotlin-android")
 }
 
 android {
