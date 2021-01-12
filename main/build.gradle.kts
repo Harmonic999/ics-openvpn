@@ -16,7 +16,7 @@ android {
     compileSdkVersion(30)
 
     defaultConfig {
-        minSdkVersion(14)
+        minSdkVersion(21)
         targetSdkVersion(30)  //'Q'.toInt()
         versionCode = 175
         versionName = "0.7.21"
