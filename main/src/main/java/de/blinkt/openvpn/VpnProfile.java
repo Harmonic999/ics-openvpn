@@ -195,10 +195,7 @@ public class VpnProfile implements Serializable, Cloneable {
 
     public static boolean doUseOpenVPN3(Context c) {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(c);
-        boolean useOpenVPN3 = prefs.getBoolean("ovpn3", false);
-        if (!BuildConfig.openvpn3)
-            useOpenVPN3 = false;
-        return useOpenVPN3;
+        return prefs.getBoolean("ovpn3", false);
     }
 
     //! Put inline data inline and other data as normal escaped filename

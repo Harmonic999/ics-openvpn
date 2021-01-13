@@ -46,9 +46,6 @@ android {
 
         }
 
-        create("skeleton") {
-        }
-
         getByName("debug") {
         }
 
@@ -92,13 +89,6 @@ android {
 
     flavorDimensions("implementation")
 
-    productFlavors {
-        create("skeleton") {
-            setDimension("implementation")
-            buildConfigField("boolean", "openvpn3", "false")
-        }
-    }
-
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -112,8 +102,6 @@ android {
             isUniversalApk = true
         }
     }
-
-
 }
 
 var swigcmd = "swig"
@@ -151,7 +139,6 @@ android.applicationVariants.all(object : Action<ApplicationVariant> {
     }
 })
 
-
 dependencies {
     // https://maven.google.com/web/index.html
     // https://developer.android.com/jetpack/androidx/releases/core
@@ -159,10 +146,4 @@ dependencies {
 
     implementation("androidx.annotation:annotation:1.1.0")
     implementation("androidx.core:core:$coreVersion")
-
-    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
-    testImplementation("junit:junit:4.13")
-    testImplementation("org.mockito:mockito-core:3.3.3")
-    testImplementation("org.robolectric:robolectric:4.3.1")
-    testImplementation("androidx.test:core:1.2.0")
 }
