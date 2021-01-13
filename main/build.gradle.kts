@@ -32,11 +32,9 @@ android {
 
     testOptions.unitTests.isIncludeAndroidResources = true
 
-
-
     externalNativeBuild {
         cmake {
-            setPath(File("${projectDir}/src/main/cpp/CMakeLists.txt"))
+            path = File("${projectDir}/src/main/cpp/CMakeLists.txt")
         }
     }
 
@@ -78,11 +76,11 @@ android {
 
     buildTypes {
         getByName("release") {
-            if (project.hasProperty("icsopenvpnDebugSign")) {
+            signingConfig = if (project.hasProperty("icsopenvpnDebugSign")) {
                 logger.warn("property icsopenvpnDebugSign set, using debug signing for release")
-                signingConfig = android.signingConfigs.getByName("debug")
+                android.signingConfigs.getByName("debug")
             } else {
-                signingConfig = signingConfigs.getByName("release")
+                signingConfigs.getByName("release")
             }
         }
     }
