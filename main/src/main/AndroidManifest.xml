@@ -17,7 +17,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app"
         android:supportsRtl="true"
-        android:theme="@style/blinkt"
         tools:ignore="UnusedAttribute">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -36,8 +35,7 @@
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:taskAffinity=".DisconnectVPN"
-            android:theme="@style/blinkt.dialog" />
+            android:taskAffinity=".DisconnectVPN" />
 
         <service
             android:name=".core.OpenVPNService"
@@ -84,7 +82,6 @@
             android:excludeFromRecents="true"
             android:label="@string/vpn_launch_title"
             android:taskAffinity=".LaunchVPN"
-            android:theme="@style/blinkt.dialog"
             tools:ignore="ExportedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
