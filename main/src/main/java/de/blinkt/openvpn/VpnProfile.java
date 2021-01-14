@@ -16,12 +16,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.security.KeyChain;
 import android.security.KeyChainException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.util.Base64;
 
 import de.blinkt.openvpn.core.*;
+
 import org.spongycastle.util.io.pem.PemObject;
 import org.spongycastle.util.io.pem.PemWriter;
 
@@ -166,7 +169,7 @@ public class VpnProfile implements Serializable, Cloneable {
     private int mProfileVersion;
     public String mDataCiphers = "";
 
-    public boolean mBlockUnusedAddressFamilies =true;
+    public boolean mBlockUnusedAddressFamilies = true;
 
     public VpnProfile(String name) {
         mUuid = UUID.randomUUID();
@@ -277,7 +280,7 @@ public class VpnProfile implements Serializable, Cloneable {
     public void upgradeProfile() {
 
         /* Fallthrough is intended here */
-        switch(mProfileVersion) {
+        switch (mProfileVersion) {
             case 0:
             case 1:
                 /* default to the behaviour the OS used */
@@ -305,8 +308,7 @@ public class VpnProfile implements Serializable, Cloneable {
                 if (mAllowAppVpnBypass)
                     mBlockUnusedAddressFamilies = !mAllowAppVpnBypass;
             case 8:
-                if (!TextUtils.isEmpty(mCipher) && !mCipher.equals("AES-256-GCM") && !mCipher.equals("AES-128-GCM"))
-                {
+                if (!TextUtils.isEmpty(mCipher) && !mCipher.equals("AES-256-GCM") && !mCipher.equals("AES-128-GCM")) {
                     mDataCiphers = "AES-256-GCM:AES-128-GCM:" + mCipher;
                 }
             default:
@@ -445,8 +447,7 @@ public class VpnProfile implements Serializable, Cloneable {
             case VpnProfile.TYPE_PKCS12:
                 cfg.append(insertFileData("pkcs12", mPKCS12Filename));
 
-                if (!TextUtils.isEmpty(mCaFilename))
-                {
+                if (!TextUtils.isEmpty(mCaFilename)) {
                     cfg.append(insertFileData("ca", mCaFilename));
                 }
                 break;
@@ -617,8 +618,7 @@ public class VpnProfile implements Serializable, Cloneable {
                 cfg.append("remote-cert-tls server\n");
         }
 
-        if (!TextUtils.isEmpty(mDataCiphers))
-        {
+        if (!TextUtils.isEmpty(mDataCiphers)) {
             cfg.append("data-ciphers ").append(mDataCiphers).append("\n");
         }
 
@@ -838,12 +838,6 @@ public class VpnProfile implements Serializable, Cloneable {
         return caChain;
     }
 
-    private X509Certificate[] getExtAppCertificates(Context context) throws KeyChainException {
-        if (mExternalAuthenticator == null || mAlias == null)
-            throw new KeyChainException("Alias or external auth provider name not set");
-        return ExtAuthHelper.getCertificateChain(context, mExternalAuthenticator, mAlias);
-    }
-
     public String[] getExternalCertificates(Context context) {
         return getExternalCertificates(context, 5);
     }
@@ -858,11 +852,7 @@ public class VpnProfile implements Serializable, Cloneable {
             String keystoreChain = null;
 
             X509Certificate caChain[];
-            if (mAuthenticationType == TYPE_EXTERNAL_APP) {
-                caChain = getExtAppCertificates(context);
-            } else {
-                caChain = getKeyStoreCertificates(context);
-            }
+            caChain = getKeyStoreCertificates(context);
             if (caChain == null)
                 throw new NoCertReturnedException("No certificate returned from Keystore");
 
@@ -1147,32 +1137,12 @@ public class VpnProfile implements Serializable, Cloneable {
     public String getSignedData(Context c, String b64data, boolean pkcs1padding) {
         byte[] data = Base64.decode(b64data, Base64.DEFAULT);
         byte[] signed_bytes;
-        if (mAuthenticationType == TYPE_EXTERNAL_APP) {
-            RsaPaddingType paddingType = pkcs1padding ? RsaPaddingType.PKCS1_PADDING : RsaPaddingType.NO_PADDING;
-            Bundle extra = new Bundle();
-            extra.putInt(EXTRA_RSA_PADDING_TYPE, paddingType.ordinal());
-
-            signed_bytes = getExtAppSignedData(c, data, extra);
-        }
-        else {
-            signed_bytes = getKeyChainSignedData(data, pkcs1padding);
-        }
+        signed_bytes = getKeyChainSignedData(data, pkcs1padding);
 
         if (signed_bytes != null)
             return Base64.encodeToString(signed_bytes, Base64.NO_WRAP);
         else
             return null;
-    }
-
-    private byte[] getExtAppSignedData(Context c, byte[] data, Bundle extra) {
-        if (TextUtils.isEmpty(mExternalAuthenticator))
-            return null;
-        try {
-            return ExtAuthHelper.signData(c, mExternalAuthenticator, mAlias, data, extra);
-        } catch (KeyChainException | InterruptedException e) {
-            VpnStatus.logError(R.string.error_extapp_sign, mExternalAuthenticator, e.getClass().toString(), e.getLocalizedMessage());
-            return null;
-        }
     }
 
     private byte[] getKeyChainSignedData(byte[] data, boolean pkcs1padding) {
